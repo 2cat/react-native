@@ -1,49 +1,49 @@
 ---
 id: tutorial
-title: Tutorial
+title: 教程
 layout: docs
 category: Quick Start
 permalink: docs/tutorial.html
 next: videos
 ---
 
-## Preface
+## 前言
 
-This tutorial aims to get you up to speed with writing iOS apps using React Native. If you're wondering what React Native is and why Facebook built it, this [blog post](https://code.facebook.com/posts/1014532261909640/react-native-bringing-modern-web-techniques-to-mobile/) explains that.
+该教程目的是让你快速地开始使用 React Native 开发 iOS 应用。如果你想知道 React Native 是什么，为什么 Facebook 构造这个工具，这篇[博文](https://code.facebook.com/posts/1014532261909640/react-native-bringing-modern-web-techniques-to-mobile/)解释了这些问题。
 
-We assume you have experience writing websites with React. If not, you can learn about it on the [React website](http://facebook.github.io/react/).
-
-
-## Setup
-
-React Native requires OSX, Xcode, Homebrew, node, npm, and [watchman](https://facebook.github.io/watchman/docs/install.html). [Flow](https://github.com/facebook/flow) is optional.
-
-After installing these dependencies there are two simple commands to get a React Native project all set up for development.
-
-1. `npm install -g react-native-cli`
-
-    react-native-cli is a command line interface that does the rest of the set up. It’s installable via npm. This will install `react-native`as a command in your terminal. You only ever need to do this once.
-
-2. `react-native init AwesomeProject`
-
-    This command fetches the React Native source code and dependencies and then creates a new Xcode project in `AwesomeProject/AwesomeProject.xcodeproj`.
+我们假设你已经有用 React 开发网站的经验了。如果没有经验，你可以在[ React 网站](http://facebook.github.io/react/)学习它。
 
 
-## Development
+## 环境设置
 
-You can now open this new project (`AwesomeProject/AwesomeProject.xcodeproj`) in Xcode and simply build and run it with cmd+R. Doing so will also start a node server which enables live code reloading. With this you can see your changes by pressing cmd+R in the simulator rather than recompiling in Xcode.
+React Native 需要 OSX ， Xcode ， Homebrew ， node ， npm ，和 [watchman](https://facebook.github.io/watchman/docs/install.html) 。 [Flow](https://github.com/facebook/flow) 是可选的。
 
-For this tutorial we'll be building a simple version of the Movies app that fetches 25 movies that are in theaters and displays them in a ListView.
+在安装了这些依赖之后，有两个简单的命令用于设置一个 React Native 项目的所有开发需要的内容。
+
+1、`npm install -g react-native-cli`
+
+    react-native-cli 是一个完成余下设置工作的命令接口。可以通过 npm 安装。这将会安装一个 `react-native` 命令到你的终端中。该命令你只需要成功运行一次。
+
+2、`react-native init AwesomeProject`
+
+    该命令获取 React Native 源码和相关依赖，然后创建一个新的 Xcode 项目到 `AwesomeProject/AwesomeProject.xcodeproj` 。
+
+
+## 开发
+
+你现在可以在 Xcode 中打开这个新项目（ `AwesomeProject/AwesomeProject.xcodeproj` ），简单地通过 cmd+R 构建和运行。这么做的同时也会启动一个 node 服务器，用于开启实时代码加载功能。通过这个功能，你可以按下 cmd+R 在模拟器中看到你做的变化，而不用在 Xcode 中重新编译。
+
+在这篇教程中，我们将会构建一个电影应用的简单版本，该应用从电影院获取 25 条电影数据，然后展示在 ListView 中。
 
 
 ### Hello World
 
-`react-native init` will copy `Examples/SampleProject` to whatever you named your project, in this case AwesomeProject. This is a simple hello world app. You can edit `index.ios.js` to make changes to the app and then press cmd+R in the simulator to see the changes.
+`react-native init` 将会复制 `Examples/SampleProject` 到你命名项目的地方，在这里是 AwesomeProject 。这是一个简单的 hello world 应用。你可以编辑 `index.ios.js` ，然后在模拟器中按下 cmd+R 来观察变化。
 
 
-### Mocking data
+### 原型数据（ Mocking data ）
 
-Before we write the code to fetch actual Rotten Tomatoes data let's mock some data so we can get our hands dirty with React Native. At Facebook we typically declare constants at the top of JS files, just below the requires, but feel free to add the following constant wherever you like. In `index.ios.js`:
+在我们书写获取真正的 Rotten Tomatoes 数据之前，让我们构造一些数据模型。在 Facebook ，我们通常在 JS 文件的顶部 require 的下面声明常量，但是对于以下常量，随便放在什么地方都可以。 `index.ios.js` 中：
 
 ```javascript
 var MOCKED_MOVIES_DATA = [
@@ -52,9 +52,9 @@ var MOCKED_MOVIES_DATA = [
 ```
 
 
-### Render a movie
+### 渲染一条电影数据
 
-We're going to render the title, year, and thumbnail for the movie. Since thumbnail is an Image component in React Native, add Image to the list of React requires below.
+我们将会渲染电影的标题，年份，以及缩略图。因为缩略图是 React Native 中的一个图片组件，在下面的 React 依赖列表中添加 Image 。
 
 ```javascript
 var {
@@ -66,7 +66,7 @@ var {
 } = React;
 ```
 
-Now change the render function so that we're rendering the data mentioned above rather than hello world.
+现在改变 render 函数，以便于渲染前面提到的电影数据，而不是显示 hello world。
 
 ```javascript
   render: function() {
@@ -81,7 +81,7 @@ Now change the render function so that we're rendering the data mentioned above 
   }
 ```
 
-Press cmd+R and you should see "Title" above "2015". Notice that the Image doesn't render anything. This is because we haven't specified the width and height of the image we want to render. This is done via styles. While we're changing the styles let's also clean up the styles we're no longer using.
+按下 cmd+R ，你应该看到 “Title” 位于 “2015” 之上。注意 Image 并没有渲染出任何内容，因为我们没有指定想渲染的图片元素的宽度和高度，这可以通过样式（ styles ）来指定。在我们改变样式的同时，清除不再使用的样式。
 
 ```javascript
 var styles = StyleSheet.create({
@@ -98,7 +98,7 @@ var styles = StyleSheet.create({
 });
 ```
 
-And lastly we need to apply this style to the Image component:
+最后，我们需要应用样式到 Image 组件上：
 
 ```javascript
         <Image
@@ -107,16 +107,16 @@ And lastly we need to apply this style to the Image component:
         />
 ```
 
-Press cmd+R and the image should now render.
+按下 cmd+R ，然后图片应该会渲染出来了。
 
 <div class="tutorial-mock">
   <img src="/react-native/img/TutorialMock.png" />
 </div>
 
 
-### Add some styling
+### 添加一些样式
 
-Great, we've rendered our data. Now let's make it look better. I'd like to put the text to the right of the image and make the title larger and centered within that area:
+太棒了，已经渲染出来了数据。现在让它看起来更漂亮。我想把文本放在图片的右侧，把标题字体放大并保持居中：
 
 ```
 +---------------------------------+
@@ -128,7 +128,7 @@ Great, we've rendered our data. Now let's make it look better. I'd like to put t
 +---------------------------------+
 ```
 
-We'll need to add another container in order to vertically lay out components within horizontally layed out components.
+我们将需要添加另一个容器，用于在水平布局的组件中放置垂直布局的组件。
 
 ```javascript
       return (
@@ -145,7 +145,7 @@ We'll need to add another container in order to vertically lay out components wi
       );
 ```
 
-Not too much has changed, we added a container around the Texts and then moved them after the Image (because they're to the right of the Image). Let's see what the style changes look like:
+没有改变太多代码，在文本附近添加了一个容器，然后移到 Image 之后（因为要放在 Image 的右侧）。让我们看看样式变成什么样子了：
 
 ```javascript
   container: {
@@ -157,11 +157,11 @@ Not too much has changed, we added a container around the Texts and then moved t
   },
 ```
 
-We use FlexBox for layout - see [this great guide](https://css-tricks.com/snippets/css/a-guide-to-flexbox/) to learn more about it.
+我们使用弹性盒子（ FlexBox ）来布局 - 参考[这个伟大的指南](https://css-tricks.com/snippets/css/a-guide-to-flexbox/)来学习弹性盒子（ FlexBox ）。
 
-In the above code snippet, we simply added `flexDirection: 'row'` that will make children of our main container to be layed out horizontally instead of vertically.
+在上面的代码片段中，我们简单地添加了 `flexDirection: 'row'` ，这使得我们的主容器的子级布局在水平方向上而不是垂直方向。
 
-Now add another style to the JS `style` object:
+现在，给 JS `style` 对象添加另一个样式：
 
 ```javascript
   rightContainer: {
@@ -169,9 +169,9 @@ Now add another style to the JS `style` object:
   },
 ```
 
-This means that the `rightContainer` takes up the remaining space in the parent container that isn't taken up by the Image. If this doesn't make sense, add a `backgroundColor` to `rightContainer` and then try removing the `flex: 1`. You'll see that this causes the container's size to be the minimum size that fits its children.
+这意味着 `rightContainer` 填充父容器中 Image 占用后的空间。如果还不理解，可以给 `rightContainer` 添加一个 `backgroundColor` 样式，然后尝试移除 `flex: 1` 。你将会看到这引起容器的尺寸变化到刚好包住子级的大小。
 
-Styling the text is pretty straightforward:
+给文本添加样式相当直接：
 
 ```javascript
   title: {
@@ -184,17 +184,17 @@ Styling the text is pretty straightforward:
   },
 ```
 
-Go ahead and press cmd+R and you'll see the updated view.
+继续前进，按下 cmd+R ，然后你将看到更新后的界面。
 
 <div class="tutorial-mock">
   <img src="/react-native/img/TutorialStyledMock.png" />
 </div>
 
-### Fetching real data
+### 获取真正的数据
 
-Fetching data from Rotten Tomatoes's API isn't really relevant to learning React Native so feel free to breeze through this section.
+从 Rotten Tomatoes 的 API 中获取数据对于学习 React Native 来说并不重要，因此不用担心，快速地阅读这一节。
 
-Add the following constants to the top of the file (typically below the requires) to create the REQUEST_URL used to request data with.
+将下列常量添加到文件的顶部（通常位于 require 下面），创建用于获取数据的 REQUEST_URL 。
 
 ```javascript
 var API_KEY = '7waqfqbprs7pajbz28mqf6vz';
@@ -204,7 +204,7 @@ var PARAMS = '?apikey=' + API_KEY + '&page_limit=' + PAGE_SIZE;
 var REQUEST_URL = API_URL + PARAMS;
 ```
 
-Add some initial state to our application so that we can check `this.state.movies === null` to determine whether the movies data has been loaded or not. We can set this data when the response comes back with `this.setState({movies: moviesData})`. Add this code just above the render function inside our React class.
+给应用添加一些初始化 state ，以便于可以通过检查 `this.state === null` 来辨别当前是否加载了电影数据。当请求返回的时候，我们可以使用 `this.setState({moves: moviesData})` 来设置该数据。添加下列代码到 render 函数的上面， React 类的里面。
 
 ```javascript
   getInitialState: function() {
@@ -214,7 +214,7 @@ Add some initial state to our application so that we can check `this.state.movie
   },
 ```
 
-We want to send off the request after the component has finished loading. `componentDidMount` is a function of React components that React will call exactly once, just after the component has been loaded.
+我们想要在组件完成加载之后发送请求。 `componentDidMount` 是一个 React 将会调用一次的函数，就在组件加载之后被调用。
 
 ```javascript
   componentDidMount: function() {
@@ -222,7 +222,7 @@ We want to send off the request after the component has finished loading. `compo
   },
 ```
 
-Now add `fetchData` function used above to our main component. This method will be respondible for handling data fetching. All you need to do is call `this.setState({movies: data})` after resolving the promise chain because the way React works is that `setState` actually triggers a re-render and then the render function will notice that `this.state.movies` is no longer `null`.  Note that we call `done()` at the end of the promise chain - always make sure to call `done()` or any errors thrown will get swallowed.
+现在，添加上面使用到的 `fetchData` 函数到主组件中。该方法将负责获取数据。你只需要在解析了 promise 链之后调用 `this.setState({movies: data})` ，因为 React 的工作方式就是 `setState` 实际上出发一个重新渲染的事件，然后 render 函数将会注意到 `this.state.movies` 不再是 `null` 。注意，在 promise 链的最后调用了 `done()` - 总是确保调用 `done()` ，否则抛出的错误将无法捕获。
 
 ```javascript
   fetchData: function() {
@@ -237,7 +237,7 @@ Now add `fetchData` function used above to our main component. This method will 
   },
 ```
 
-Now modify the render function to render a loading view if we don't have any movies data, and to render the first movie otherwise.
+现在修改 render 函数，如果没有电影数据的话就渲染一个加载视图，否则渲染第一条电影数据。
 
 ```javascript
   render: function() {
@@ -275,7 +275,7 @@ Now modify the render function to render a loading view if we don't have any mov
   },
 ```
 
-Now press cmd+R and you should see "Loading movies..." until the response comes back, then it will render the first movie it fetched from Rotten Tomatoes.
+现在按下 cmd+R ，然后你应该会看见“ Loading movies ”。请求返回之后，将会渲染出从 Rotten Tomatoes 取到的第一条电影数据。
 
 <div class="tutorial-mock">
   <img src="/react-native/img/TutorialSingleFetched.png" />
@@ -283,11 +283,11 @@ Now press cmd+R and you should see "Loading movies..." until the response comes 
 
 ## ListView
 
-Let's now modify this application to render all of this data in a `ListView` component, rather than just rendering the first movie.
+现在让我们修改该应用，在一个 `ListView` 中渲染所有的数据，而不是仅仅渲染第一条电影数据。
 
-Why is a `ListView` better than just rendering all of these elements or putting them in a `ScrollView`? Despite React being fast, rendering a possibly infinite list of elements could be slow. `ListView` schedules rendering of views so that you only display the ones on screen and those already rendered but off screen are removed from the native view hierarchy.
+为什么单独的 `ListView` 比渲染出所有这些元素或者把这些元素放在一个 `ScrollView` 里面要好？尽管 React 很快，但是渲染一个可能无止境的元素列表还是会变得很慢。 `ListView` 规划好要渲染的视图，以便于仅需要展示在可视区的元素，对于那些已经渲染了但是位于可视区域之外的元素会从本地的视图树中移除。
 
-First thing's first: add the `ListView` require to the top of the file.
+首先的首先：在文件顶部添加引入 `ListView` 的代码。
 
 ```javascript
 var {
@@ -300,7 +300,7 @@ var {
 } = React;
 ```
 
-Now modify the render function so that once we have our data it renders a ListView of movies instead of a single movie.
+现在修改 render 函数，以便于一旦获取到数据就在 ListView 中渲染出来而不是显示一条电影数据。
 
 ```javascript
   render: function() {
@@ -318,9 +318,9 @@ Now modify the render function so that once we have our data it renders a ListVi
   },
 ```
 
-The `DataSource` is an interface that `ListView` is using to determine which rows have changed over the course of updates.
+`DataSource` 是一个接口， `ListView` 用来判断哪一行视图在更新过程中发生了改变。
 
-You'll notice we used `dataSource` from `this.state`. The next step is to add an empty `dataSource` to the object returned by `getInitialState`. Also, now that we're storing the data in `dataSource`, we should no longer use `this.state.movies` to avoid storing data twice. We can use boolean property of the state (`this.state.loaded`) to tell whether data fetching has finished.
+你将注意到我们使用了 `this.state` 中的 `dataSource` 。下一步就是添加一个从 `getInitialState` 返回的空的 `dataSource` 到这个对象中。同时，既然我们把数据存储在了 `dataSource` 之中，我们不应该再使用 `this.state.movies` ，避免存放了两份同样的数据。我们可以使用 state 上的布尔属性（ `this.state.loaded` ）来判断数据获取是否完成。
 
 ```javascript
   getInitialState: function() {
@@ -333,7 +333,7 @@ You'll notice we used `dataSource` from `this.state`. The next step is to add an
   },
 ```
 
-And here is the modified `fetchData` method that updates the state accordingly:
+下面是修改了的 `fetchData` 方法，相应地更新 state ：
 
 ```javascript
   fetchData: function() {
@@ -349,7 +349,7 @@ And here is the modified `fetchData` method that updates the state accordingly:
   },
 ```
 
-Finally, we add styles for the `ListView` component to the `styles` JS object:
+最后，我们把 `ListView` 组件需要的样式添加到 `styles` JS 对象中：
 ```javascript
   listView: {
     paddingTop: 20,
@@ -357,16 +357,16 @@ Finally, we add styles for the `ListView` component to the `styles` JS object:
   },
 ```
 
-And here's the final result:
+下面是最终的结果：
 
 <div class="tutorial-mock">
   <img src="/react-native/img/TutorialFinal.png" />
 </div>
 
-There's still some work to be done to make it a fully functional app such as: adding navigation, search, infinite scroll loading, etc. Check the [Movies Example](https://github.com/facebook/react-native/tree/master/Examples/Movies) to see it all working.
+要让示例成为一个功能完备的应用，还有很多工作要做，比如这些功能：添加导航，搜索，无穷滚动加载，等等。访问[电影实例](https://github.com/facebook/react-native/tree/master/Examples/Movies)，实现了上述所有功能。
 
 
-### Final source code
+### 最终的源码
 
 ```javascript
 /**
