@@ -1,19 +1,19 @@
 ---
 id: style
-title: Style
+title: 样式
 layout: docs
 category: Guides
 permalink: docs/style.html
 next: gesture-responder-system
 ---
 
-React Native doesn't implement CSS but instead relies on JavaScript to let you style your application. This has been a controversial decision and you can read through those slides for the rationale behind it.
+React Native 没有实现 CSS ，但是依赖 JavaScript 来设置应用的样式。这是一个有争议的决定，你可以查看这个幻灯片来了解背后的基本原理。
 
 <script async class="speakerdeck-embed" data-id="2e15908049bb013230960224c1b4b8bd" data-ratio="2" src="//speakerdeck.com/assets/embed.js"></script>
 
-## Declare Styles
+## 声明样式
 
-The way to declare styles in React Native is the following:
+在 React Native 中声明样式的方式如下：
 
 ```javascript
 var styles = StyleSheet.create({
@@ -31,32 +31,32 @@ var styles = StyleSheet.create({
 });
 ```
 
-`StyleSheet.create` construct is optional but provides some key advantages. It ensures that the values are **immutable** and **opaque** by transforming them into plain numbers that reference an internal table. By putting it at the end of the file, you also ensure that they are only created once for the application and not on every render.
+`StyleSheet.create` 构造函数是可选的，但是它具备一些重要的优点。该函数将传入的值转换为整数，整数值指向一个内部的映射表，通过这个机制可以确保传入的值是不可改变的。通过把样式表创建放在源码文件结束位置，也可以确保样式对象在应用中只创建了一次而不是每次渲染的时候都创建一次。
 
-All the attribute names and values are a subset of what works on the web. For layout, React Native implements [Flexbox](/react-native/docs/flexbox.html).
+所有的属性名和属性值是 web 样式的一个子集。对于布局， React Native 实现了 [Flexbox](/react-native/docs/flexbox.html)。
 
-## Using Styles
+## 使用样式
 
-All the core components accept a style attribute
+所有的核心组件都接受一个样式
 
 ```javascript
 <Text style={styles.base} />
 <View style={styles.background} />
 ```
 
-and also accepts an array of styles
+也接受一组样式
 
 ```javascript
 <View style={[styles.base, styles.background]} />
 ```
 
-The behavior is the same as `Object.assign`: in case of conflicting values, the one from the right-most element will have precedence and falsy values like `false`, `undefined` and `null` will be ignored. A common pattern is to conditionally add a style based on some condition.
+这和 `Object.assign` 的行为是一样的：为了避免值的冲突，右侧的数组元素将会有更高的优先级，但是像 `false` 、 `undefined` 和 `null` 这种假值将会被忽略。一种通常的做法是基于某些条件运算符添加样式。
 
 ```javascript
 <View style={[styles.base, this.state.active && styles.active]} />
 ```
 
-Finally, if you really have to, you can also create style objects in render, but they are highly discouraged. Put them last in the array definition.
+最后，如果实在需要，你也可以在渲染的时候创建样式对象，但是非常不推荐这样做。把这些对象放在样式数组的最后。
 
 ```javascript
 <View
@@ -67,9 +67,9 @@ Finally, if you really have to, you can also create style objects in render, but
 />
 ```
 
-## Pass Styles Around
+## 传递样式参数
 
-In order to let a call site customize the style of your component children, you can pass styles around. Use `View.propTypes.style` and `Text.propTypes.style` in order to make sure only styles are being passed.
+为了让组件能指定子组件的样式，可以传递样式参数。使用 `View.propTypes.style` 和 `Text.propTypes.style` 确保传入的是样式数据。
 
 ```javascript
 var List = React.createClass({
