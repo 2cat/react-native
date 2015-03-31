@@ -22,24 +22,23 @@ var _initialURL = RCTLinkingManager &&
 var DEVICE_NOTIF_EVENT = 'openURL';
 
 /**
- * `LinkingIOS` gives you an interface to interact with both incoming and
- * outgoing app links.
+ * `LinkingIOS` gives you a general interface to interact with both, incoming
+ * and outgoing app links.
  *
  * ### Basic Usage
  *
  * #### Handling deep links
  *
- * If your app was launched from an external URL registered with your app, you can
- * access and handle it from any component you want with the following:
+ * If your app was launched from a external url registered to your app you can
+ * access and handle it from any component you want with
  *
  * ```
  * componentDidMount() {
- *   var url = LinkingIOS.popInitialURL();
- *   if (url) { ... }
+ *  var url = LinkingIOS.popInitialURL();
  * }
  * ```
  *
- * If you also want to listen to incoming app links during your app's
+ * In case you also want to listen to incoming app links during your app's
  * execution you'll need to add the following lines to you `*AppDelegate.m`:
  *
  * ```
@@ -48,7 +47,7 @@ var DEVICE_NOTIF_EVENT = 'openURL';
  * }
  * ```
  *
- * And in your React component, you'll then be able to listen to the events from
+ * And then on your React component you'll be able to listen to the events on
  * `LinkingIOS` as follows
  *
  * ```
@@ -65,14 +64,13 @@ var DEVICE_NOTIF_EVENT = 'openURL';
  *
  * #### Triggering App links
  *
- * To trigger an app link (browser, email, or custom schemes) you can call:
+ * To trigger an app link (browser, email or custom schemas) you call
  *
  * ```
  * LinkingIOS.openURL(url)
  * ```
  *
- * If you want to check if a URL can be opened by an installed app on the system you can call
- * 
+ * If you want to check if any installed app can handle a given url beforehand you can call
  * ```
  * LinkingIOS.canOpenURL(url, (supported) => {
  *   if (!supported) {
@@ -95,9 +93,7 @@ class LinkingIOS {
     );
     _notifHandlers[handler] = RCTDeviceEventEmitter.addListener(
       DEVICE_NOTIF_EVENT,
-      (notifData) => {
-        handler(new LinkingIOS(notifData));
-      }
+      handler
     );
   }
 
@@ -118,8 +114,6 @@ class LinkingIOS {
 
   /**
    * Try to open the given `url` with any of the installed apps.
-   * If multiple applications can open `url`, the one that opens
-   * is undefined.
    */
   static openURL(url: string) {
     invariant(
@@ -130,7 +124,7 @@ class LinkingIOS {
   }
 
   /**
-   * Determine whether an installed app can handle a given `url`.
+   * Determine wether or not the an installed app can handle a given `url`
    * The callback function will be called with `bool supported` as the only argument
    */
   static canOpenURL(url: string, callback: Function) {
@@ -146,7 +140,7 @@ class LinkingIOS {
   }
 
   /**
-   * If the app launch was triggered by an app link, it will pop the link URL,
+   * If the app launch was triggered by an app link, it will pop the link url,
    * otherwise it will return `null`
    */
   static popInitialURL(): ?string {

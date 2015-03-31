@@ -9,9 +9,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import "RCTBridgeModule.h"
-#import "RCTConvert.h"
-#import "RCTLog.h"
+#import "../Base/RCTBridgeModule.h"
+#import "../Base/RCTConvert.h"
+#import "../Base/RCTLog.h"
 
 @class RCTBridge;
 @class RCTEventDispatcher;
@@ -152,5 +152,20 @@ typedef void (^RCTViewManagerUIBlock)(RCTUIManager *uiManager, RCTSparseArray *v
 
 #define RCT_IGNORE_SHADOW_PROPERTY(name) \
 - (void)set_##name:(id)value forShadowView:(id)view withDefaultView:(id)defaultView {}
+
+/**
+ * Used for when view property names change. Will log an error when used.
+ */
+#define RCT_DEPRECATED_VIEW_PROPERTY(oldName, newName) \
+- (void)set_##oldName:(id)json forView:(id)view withDefaultView:(id)defaultView { \
+  RCTLogError(@"Property '%s' has been replaced by '%s'.", #oldName, #newName); \
+  [self set_##newName:json forView:view withDefaultView:defaultView]; \
+}
+
+#define RCT_DEPRECATED_SHADOW_PROPERTY(oldName, newName) \
+- (void)set_##oldName:(id)json forShadowView:(id)view withDefaultView:(id)defaultView { \
+  RCTLogError(@"Property '%s' has been replaced by '%s'.", #oldName, #newName); \
+  [self set_##newName:json forView:view withDefaultView:defaultView]; \
+}
 
 @end
