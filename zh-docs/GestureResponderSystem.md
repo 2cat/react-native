@@ -61,12 +61,11 @@ next: nativemodulesios
 
 `onStartShouldSetResponder` 和 `onMoveShouldSetResponder` 在一个冒泡模型中调用，最深的节点最先调用。这意味着当多个视图给 `*ShouldSetResponder` 返回 true 的时候，最深的组件将会获得响应权。这在很多场景当中是满足需求的，因为确保所有控件和按钮都是可用的。
 
-然而，某些时候父级想要确保自己是响应器。
-However, sometimes a parent will want to make sure that it becomes responder. This can be handled by using the capture phase. Before the responder system bubbles up from the deepest component, it will do a capture phase, firing `on*ShouldSetResponderCapture`. So if a parent View wants to prevent the child from becoming responder on a touch start, it should have a `onStartShouldSetResponderCapture` handler which returns true.
+然而，某些时候父级想要确保自己是响应器，这可以在捕获阶段处理。在响应系统从最深组件冒泡之前，会有一个捕获过程，触发 `on*ShouldSetResponderCapture` 。因此，如果父视图想要在触摸开始的时候阻止子视图成为响应器，就应该有一个返回 true 的 `onStartShouldSetResponderCapture` 处理器。
 
  - `View.props.onStartShouldSetResponderCapture: (evt) => true,`
  - `View.props.onMoveShouldSetResponderCapture: (evt) => true,`
 
 ### PanResponder
 
-For higher-level gesture interpretation, check out [PanResponder](/react-native/docs/panresponder.html).
+对于更高层的手势识别，参考 [PanResponder](/react-native/docs/panresponder.html)。
