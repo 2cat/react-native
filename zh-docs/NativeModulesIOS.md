@@ -1,23 +1,23 @@
 ---
 id: nativemodulesios
-title: Native Modules (iOS)
+title: 本地模块 (iOS)
 layout: docs
 category: Guides
 permalink: docs/nativemodulesios.html
 next: testing
 ---
 
-Sometimes an app needs access to platform API, and React Native doesn't have a corresponding wrapper yet. Maybe you want to reuse some existing Objective-C or C++ code without having to reimplement it in JavaScript. Or write some high performance, multi-threaded code such as image processing, network stack, database or rendering.
+有时应用需要访问平台 API ，并且 React Native 还没有提供相应的封装。可能你想重用一些已有的 Objective-C 或者 C++ 代码，而不是在 JavaScript 中重新实现。或者要写一些高性能的、多线程的代码，例如图片处理、网络处理、数据库操作以及界面渲染。
 
-We designed React Native such that it is possible for you to write real native code and have access to the full power of the platform. This is a more advanced feature and we don't expect it to be part of the usual development process, however it is essential that it exists. If React Native doesn't support a native feature that you need, you should be able to build it yourself.
+我们设计 React Native 是为了能够写真正的本地代码，充分利用平台的优势。这是一个更加高级的特性，我们不希望这个成为常规的开发流程的一部分，然而，这是必不可少的。如果 React Native 不支持你需要的某个本地特性，你应该自己实现。
 
-This is a more advanced guide that shows how to build a native module. It assumes the reader knows Objective-C (Swift is not supported yet) and core libraries (Foundation, UIKit).
+本文是一篇更加高级的教程，展示如何构建一个本地模块。假设读者了解 Objective-C （ Swift 现在还不支持 ）和核心库（ Foundation, UIKit ）。
 
-## iOS Calendar module example
+## iOS 日历模块示例
 
-This guide will use [iOS Calendar API](https://developer.apple.com/library/mac/documentation/DataManagement/Conceptual/EventKitProgGuide/Introduction/Introduction.html) example. Let's say we would like to be able to access iOS calendar from JavaScript.
+本教程将会使用 [iOS 日历 API](https://developer.apple.com/library/mac/documentation/DataManagement/Conceptual/EventKitProgGuide/Introduction/Introduction.html) 举例。我们想从 JavaScript 中能够访问 iOS 日历。
 
-Native module is just an Objectve-C class that implements `RCTBridgeModule` protocol. If you are wondering, RCT is a shorthand for ReaCT.
+本地模块就是一个 Objective-C 类，该类实现了 `RCTBridgeModule` 协议。RCT 是 ReaCT 的简称。
 
 ```objective-c
 // CalendarManager.h
@@ -27,7 +27,7 @@ Native module is just an Objectve-C class that implements `RCTBridgeModule` prot
 @end
 ```
 
-React Native will not expose any methods of `CalendarManager` to JavaScript unless explicitly asked. Fortunately this is pretty easy with `RCT_EXPORT`:
+React Native 将不会暴露 `CalendarManager` 中的任何方法给 JavaScript ，除非明确说明。幸运地是，通过 `RCT_EXPORT` 可以非常简单地实现：
 
 ```objective-c
 // CalendarManager.m
@@ -42,28 +42,29 @@ React Native will not expose any methods of `CalendarManager` to JavaScript unle
 @end
 ```
 
-Now from your JavaScript file you can call the method like this:
+现在，在你的 JavaScript 文件中，可以像这样调用该方法：
 
 ```javascript
 var CalendarManager = require('NativeModules').CalendarManager;
 CalendarManager.addEventWithName('Birthday Party', '4 Privet Drive, Surrey');
 ```
 
-Notice that the exported method name was generated from first part of Objective-C selector. Sometimes it results in a non-idiomatic JavaScript name (like the one in our example). You can change the name by supplying an optional argument to `RCT_EXPORT`, e.g. `RCT_EXPORT(addEvent)`.
+注意，导出的方法名从 Objective-C 选择器的第一部分生成。有时这回导致生成一个不常用的 JavaScript 名字（比如示例中的那个名字）。你可以传递一个可选的参数给 `RCT_EXPORT` 来改变这个名字，比如：`RCT_EXPORT(addEvent)` 。
 
-The return type of the method should always be `void`. React Native bridge is asynchronous, so the only way to pass result to JavaScript is by using callbacks or emitting events (see below).
+该方法的返回值应该总是 `void` 。 React Native 桥接是异步的，所以传递结果给 JavaScript 的唯一方式是使用回调函数，或者触发事件（见下文）。
 
-## Argument types
+## 参数类型
 
-React Native supports several types of arguments that can be passed from JavaScript code to native module:
+React Native 支持几种参数类型，可以从 JavaScript 代码传入到本地模块：
 
 - string (`NSString`)
 - number (`NSInteger`, `float`, `double`, `CGFloat`, `NSNumber`)
 - boolean (`BOOL`, `NSNumber`)
-- array (`NSArray`) of any types from this list
-- map (`NSDictionary`) with string keys and values of any type from this list
+- 该列表中任何数据类型组成的数组（ `NSArray` ）
+- 映射（ `NSDictionary` ），键是字符串类型，值是该列表中的任何类型
 - function (`RCTResponseSenderBlock`)
 
+在我们的 `CalendarManager` 示例中，如果我们想传递事件日期给本地模块，我们必须要把它转换成字符串或者数字
 In our `CalendarManager` example, if we want to pass event date to native, we have to convert it to a string or a number:
 
 ```objective-c
