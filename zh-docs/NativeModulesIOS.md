@@ -130,7 +130,7 @@ CalendarManager.findEvents((error, events) => {
 
 本地模块应该仅调用一次回调函数。但是也可以暂存下回调函数在将来调用。这种方式常用于包装需要代理的 iOS 接口。参考 [`RCTAlertManager`](https://github.com/facebook/react-native/blob/master/React/Modules/RCTAlertManager.m) 。
 
-如果你想传递包含错误信息的对象给 JavaScript ，使用 `RCTUtils.h`](https://github.com/facebook/react-native/blob/master/React/Base/RCTUtils.h) 中的 `RCTMakeError` 。
+如果你想传递包含错误信息的对象给 JavaScript ，使用 [`RCTUtils.h`](https://github.com/facebook/react-native/blob/master/React/Base/RCTUtils.h) 中的 `RCTMakeError` 。
 
 ## 实现本地模块
 
