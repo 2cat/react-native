@@ -1,6 +1,6 @@
 ---
 id: nativemodulesios
-title: 本地模块 (iOS)
+title: 本地模块（ iOS ）
 layout: docs
 category: Guides
 permalink: docs/nativemodulesios.html
@@ -64,8 +64,7 @@ React Native 支持几种参数类型，可以从 JavaScript 代码传入到本�
 - 映射（ `NSDictionary` ），键是字符串类型，值是该列表中的任何类型
 - function (`RCTResponseSenderBlock`)
 
-在我们的 `CalendarManager` 示例中，如果我们想传递事件日期给本地模块，我们必须要把它转换成字符串或者数字
-In our `CalendarManager` example, if we want to pass event date to native, we have to convert it to a string or a number:
+在我们的 `CalendarManager` 示例中，如果我们想传递事件日期给本地模块，我们必须要把它转换成字符串或者数字：
 
 ```objective-c
 - (void)addEventWithName:(NSString *)name location:(NSString *)location date:(NSInteger)secondsSinceUnixEpoch
@@ -75,7 +74,7 @@ In our `CalendarManager` example, if we want to pass event date to native, we ha
 }
 ```
 
-As `CalendarManager.addEvent` method gets more and more complex, the number of arguments will grow. Some of them might be optional. In this case it's worth considering changing the API a little bit to accept a dictionary of event attributes, like this:
+随着 `CalendarManager.addEvent` 方法越来越复杂，参数的数量将会增加。某些参数可能是可选的。这时值得考虑改变一点 API 的形式，接受一个事件属性字典，就像这样：
 
 ```objective-c
 - (void)addEventWithName:(NSString *)name details:(NSDictionary *)details
@@ -86,7 +85,7 @@ As `CalendarManager.addEvent` method gets more and more complex, the number of a
 }
 ```
 
-and call it from JavaScript:
+在 JavaScript 中调用：
 
 ```javascript
 CalendarManager.addEvent('Birthday Party', {
@@ -96,17 +95,17 @@ CalendarManager.addEvent('Birthday Party', {
 })
 ```
 
-> **NOTE**: About array and map
+> **注意**： 关于数组和映射
 >
-> React Native doesn't provide any guarantees about the types of values in these structures. Your native module might expect array of strings, but if JavaScript calls your method with an array that contains number and string you'll get `NSArray` with `NSNumber` and `NSString`. It's developer's responsibility to check array/map values types (see [`RCTConvert`](https://github.com/facebook/react-native/blob/master/React/Base/RCTConvert.h) for helper methods).
+> React Native 不确保这些数据结构中的值的类型是正确的。你本地的模块可能希望得到一组字符串，但是如果 JavaScript 调用你的方法时传入一个包含数字和字符串的数组，将会得到带有 `NSNumber` 和 `NSString` 类型数据的 `NSArray` 数组。检查数组/映射中的值的类型（参考 [`RCTConvert`](https://github.com/facebook/react-native/blob/master/React/Base/RCTConvert.h) ）是开发者的责任。
 
-# Callbacks
+# 回调
 
-> **WARNING**
+> **警告**
 >
-> This section is even more experimental than others, we don't have a set of best practices around callbacks yet.
+> 相对于其它部分，该部分内容更具有尝试性，关于回调，我们至今没有一套最佳实践。
 
-Native module also supports a special kind of argument - callback. In most cases it is used to provide function call result to JavaScript.
+本地模块也支持一种特殊的参数类型 - 回调函数。在大多数情况下用于将执行结果返回给 JavaScript 。
 
 ```objective-c
 - (void)findEvents:(RCTResponseSenderBlock)callback
@@ -117,7 +116,7 @@ Native module also supports a special kind of argument - callback. In most cases
 }
 ```
 
-`RCTResponseSenderBlock` accepts only one argument - array of arguments to pass to JavaScript callback. In this case we use node's convention to set first argument to error and the rest - to the result of the function.
+`RCTResponseSenderBlock` 仅接受一个参数 - JavaScript 回调函数，该函数需要传入一组参数。此处，我们采用 node 的约定，设置第一个参数为错误对象，剩下的为 Objective-C 函数的运行结果。
 
 ```javascript
 CalendarManager.findEvents((error, events) => {
@@ -129,13 +128,13 @@ CalendarManager.findEvents((error, events) => {
 })
 ```
 
-Native module is supposed to invoke callback only once. It can, however, store the callback as an ivar and invoke it later. This pattern is often used to wrap iOS APIs that require delegate. See [`RCTAlertManager`](https://github.com/facebook/react-native/blob/master/React/Modules/RCTAlertManager.m).
+本地模块应该仅调用一次回调函数。但是也可以暂存下回调函数在将来调用。这种方式常用于包装需要代理的 iOS 接口。参考 [`RCTAlertManager`](https://github.com/facebook/react-native/blob/master/React/Modules/RCTAlertManager.m) 。
 
-If you want to pass error-like object to JavaScript, use `RCTMakeError` from [`RCTUtils.h`](https://github.com/facebook/react-native/blob/master/React/Base/RCTUtils.h).
+如果你想传递包含错误信息的对象给 JavaScript ，使用 `RCTUtils.h`](https://github.com/facebook/react-native/blob/master/React/Base/RCTUtils.h) 中的 `RCTMakeError` 。
 
-## Implementing native module
+## 实现本地模块
 
-The native module should not have any assumptions about what thread it is being called on. React Native invokes native modules methods on a separate serial GCD queue, but this is an implementation detail and might change. If the native module needs to call main-thread-only iOS API, it should schedule the operation on the main queue:
+不要假定本地模块运行在哪个线程。 React Native 在一个独立的序列的 GCD 队列中调用本地模块，但这是一个实现细节，以后可能会改变。如果本地模块需要调用仅在主线程中执行的 iOS API，应该把该操作放到主队列计划任务中：
 
 
 ```objective-c
@@ -151,11 +150,11 @@ The native module should not have any assumptions about what thread it is being 
 }
 ```
 
-The same way if the operation can take a long time to complete, the native module should not block. It is a good idea to use `dispatch_async` to schedule expensive work on background queue.
+同样，如果某个操作需要耗费很长时间完成，不要因此阻塞本地模块。使用 `dispatch_async` 把耗时的操作放到后台任务队列中是一个好办法。
 
-## Exporting constants
+## 导出常量
 
-Native module can export constants that are instantly available to JavaScript at runtime. This is useful to export some initial data that would otherwise require a bridge round-trip.
+本地模块可以导出常量，运行的时候可以在 JavaScript 中马上使用。这对于导出一些初始化的数据非常有用，不再需要 Objecttive-C 和 JavaScript 的一次双向调用。
 
 ```objective-c
 - (NSDictionary *)constantsToExport
@@ -164,18 +163,18 @@ Native module can export constants that are instantly available to JavaScript at
 }
 ```
 
-JavaScript can use this value right away:
+JavaScript 可以马上使用这个值：
 
 ```javascript
 console.log(CalendarManager.firstDayOfTheWeek);
 ```
 
-Note that the constants are exported only at initialization time, so if you change `constantsToExport` value at runtime it won't affect JavaScript environment.
+注意，该常量仅在初始化的时候导出，所以如果在运行时改变 `constantsToExport` 的值，将不会影响 JavaScript 环境。
 
 
-## Sending events to JavaScript
+## 发送事件给 JavaScript
 
-The native module can signal events to JavaScript without being invoked directly. The easiest way to do this is to use `eventDispatcher`:
+本地模块可以发送事件信号给 JavaScript ，而不是直接调用。最简单的方式就是使用 `eventDispatcher` ：
 
 ```objective-c
 - (void)calendarEventReminderReceived:(NSNotification *)notification
@@ -186,7 +185,7 @@ The native module can signal events to JavaScript without being invoked directly
 }
 ```
 
-JavaScript code can subscribe to these events:
+JavaScript 代码可以监听这些事件：
 
 ```javascript
 var subscription = DeviceEventEmitter.addListener(
@@ -194,7 +193,7 @@ var subscription = DeviceEventEmitter.addListener(
   (reminder) => console.log(reminder.name)
 );
 ...
-// Don't forget to unsubscribe
+// 别忘了取消监听
 subscription.remove();
 ```
-For more examples of sending events to JavaScript, see [`RCTLocationObserver`](https://github.com/facebook/react-native/blob/master/Libraries/Geolocation/RCTLocationObserver.m).
+更多关于发送事件给 JavaScript 的示例，请参考 [`RCTLocationObserver`](https://github.com/facebook/react-native/blob/master/Libraries/Geolocation/RCTLocationObserver.m) 。
