@@ -26,34 +26,22 @@ _所有的我们和 React Native 一起打包的库都放在项目仓库根目�
 
 ### 步骤 2
 
-点击主项目文件（代表 `.xcodeproj` 的文件），选择 `Build Phases`
-Click on your main project file (the one that represents the `.xcodeproj`)
-select `Build Phases` and drag the static library from the `Products` folder
-insed the Library you are importing to `Link Binary With Libraries`
+点击主项目文件（代表 `.xcodeproj` 的文件），选择 `Build Phases` ，从 `Products` 文件夹拖动静态库到 `Link Binary With Libraries` 。
 
-![](/react-native/img/AddToBuildPhases.png)
+![](http://facebook.github.io/react-native/img/AddToBuildPhases.png)
 
-### Step 3
+### 步骤 3
 
-Not every library will need this step, what you need to consider is:
+并不是每个库都需要这一步，你需要考虑的是：
 
-_Do I need to know the contents of the library at compile time?_
+_在编译的时候需要知道库的内容吗？_
 
-What that means is, are you using this library on the native site or just in
-JavaScript? If you are just using it in JavaScript, you are good to go!
+也就是说，是在本地调用这个库还是只在 JavaScript 中？如果是在 JavaScript 中使用，那就接着往下看吧！
 
+这一步对于我们和 React Native 一起打包的所有的库来说是不需要的，除了 `PushNotificationIOS` 和 `LinkingIOS` 。
 
-This step is not necessary for all libraries that we ship we React Native but
-`PushNotificationIOS` and `LinkingIOS`.
+比如说，对于 `PushNotificationIOS` 的情形，每次接收到新的推送提醒的时候，都必须要在 `AppDelegate` 中调用这个库的一个方法。
 
-In the case of the `PushNotificationIOS` for example, you have to call a method
-on the library from your `AppDelegate` every time a new push notifiation is
-received.
+因此需要知道这个库的头文件内容。为了达到这个目的，必须打开项目文件，选择 `Build Settings` ，找到 `Header Search Paths` 。此处你应该包含库的路径（如果库在子目录中有相关的文件，记得`递归`包含，就像示例中的 `React` ）。
 
-For that we need to know the library's headers. To achieve that you have to go
-to your project's file, select `Build Settings` and search for `Header Search
-Paths`. There you should include the path to you library (if it has relevant
-files on subdirectories remember to make it `recursive`, like `React` on the
-example).
-
-![](/react-native/img/AddToSearchPaths.png)
+![](http://facebook.github.io/react-native/img/AddToSearchPaths.png)
