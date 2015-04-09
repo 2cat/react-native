@@ -1,18 +1,19 @@
 ---
 id: testing
-title: Testing
+title: 测试
 layout: docs
 category: Guides
 permalink: docs/testing.html
-next: activityindicatorios
+next:  embedded-app
 ---
 
-## Running Tests and Contributing
+## 运行测试用例和贡献
 
-The React Native repo has several tests you can run to verify you haven't caused a regression with your PR.  These tests are run with the [Travis](http://docs.travis-ci.com/) continuous integration system, and will automatically post the results to your PR.  You can also run them locally with cmd+U in the IntegrationTest and UIExplorer apps in Xcode.  You can run the jest tests via `npm test` on the command line.  We don't have great test coverage yet, however, so most changes will still require significant manual verification, but we would love it if you want to help us increase our test coverage!
+React Native 的仓库中有几个测试用例，你可以运行它们来确保你的 PR 不会引入导致项目恶化的内容。这些测试连续运行在 [Travis](http://docs.travis-ci.com/) 集成系统上面，并且会自动提交运行结果到你的 PR 。你也可以按下 cmd+U 在本地的 XCode 运行 IntegrationTest 和 UIExplorer 应用中的测试。你可以通过 `npm test` 命令运行 jest 测试。我们的测试至今未覆盖完全，所以，这么多的改变仍然需要有意义的人工验证，但是我们欢迎你帮助我们增加测试覆盖度！
 
-## Jest Tests
+## Jest 测试
 
+[Jest](http://facebook.github.io/jest/) 是仅针对于 JS 的测试工具，运行在基于 node 的命令行上。测试代码位于 `__tests__` 目录，与要测试的代码文件位于同一个目录下面，
 [Jest](http://facebook.github.io/jest/) tests are JS-only tests run on the command line with node.  The tests themselves live in the `__tests__` directories of the files they test, and there is a large emphasis on aggressively mocking out functionality that is not under test for failure isolation and maximum speed.  You can run the existing React Native jest tests with `npm test` from the react-native root, and we encourage you to add your own tests for any components you want to contribute to.  See [`getImageSource-test.js`](https://github.com/facebook/react-native/blob/master/Examples/Movies/__tests__/getImageSource-test.js) for a basic example.
 
 ## Integration Tests.
