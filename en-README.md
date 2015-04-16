@@ -1,10 +1,11 @@
 # React Native [![Build Status](https://travis-ci.org/facebook/react-native.svg?branch=master)](https://travis-ci.org/facebook/react-native)
 
-React Native 使你能够运用 JavaScript 和 [React](http://facebook.github.io/react) 的相关知识，基于本地平台构建世界级的应用。 React Native 关注的焦点是开发者能够高效地开发所有相关平台的应用 - 学习一样东西就可以做任何事情。 Facebook 把 React Native 运用于大量的生产应用，并且将会继续向 React Native 投入人力财力。
+React Native enables you to build world-class application experiences on native platforms using a consistent developer experience based on JavaScript and
+[React](http://facebook.github.io/react). The focus of React Native is on developer efficiency across all the platforms you care about - learn once, write anywhere. Facebook uses React Native in multiple production apps and will continue investing in React Native.
 
-## 本地 iOS 组件
+## Native iOS Components
 
-在基于 React Native 的开发中，你可以使用标准的平台组件，比如 iOS 上的 `UITabBar` 和 `UINavigationController` 。这使你应用的界面看起来风格没有改变，不用考虑其它平台系统是怎么样的，保证了应用的高质量。这些组件可以通过使用它们对应的 React 组件简单地集成到你的应用中，比如 _TabBarIOS_ 和 _NavigatorIOS_ 。
+With React Native, you can use the standard platform components such as `UITabBar` and `UINavigationController` on iOS.  This gives your app a consistent look and feel with the rest of the platform ecosystem, and keeps the quality bar high.  These components are easily incorporated into your app using their React component counterparts, such as _TabBarIOS_ and _NavigatorIOS_.
 
 ```javascript
 var React = require('react-native');
@@ -23,16 +24,15 @@ var App = React.createClass({
 });
 ```
 
-## 异步执行
+## Asynchronous Execution
 
-所有 JavaScript 应用代码和本地平台代码之间的操作都是异步的，本地模块也可以使用另外的线程。这意味着可以在非主线程中解码图片，在后台保存到磁盘，计量文本和计算布局而不阻塞 UI ，等等。最后， React Native 应用是自然流动的和响应式的。本地代码和 JavaScript 代码的交互是完全格式化的，这就使得我们能够利用谷歌开发者工具在整个应用运行的时候来调试 JavaScript 代码，不论是在模拟器中还是物理设备中。
+All operations between the JavaScript application code and the native platform are performed asynchronously, and the native modules can also make use of additional threads as well.  This means we can decode images off of the main thread, save to disk in the background, measure text and compute layouts without blocking the UI, and more.  As a result, React Native apps are naturally fluid and responsive.  The communication is also fully serializable, which allows us to leverage Chrome Developer Tools to debug the JavaScript while running the complete app, either in the simulator or on a physical device.
 
 ![](http://facebook.github.io/react-native/img/chrome_breakpoint.png)
 
 
-## 触摸处理
+## Touch Handling
 
-iOS 有一个非常强大的系统叫做响应链，
 iOS has a very powerful system called the Responder Chain to negotiate touches in complex view hierarchies which does not have a universal analog on the web. React Native implements a similar responder system and provides high level components such as TouchableHighlight that integrate properly with scroll views and other elements without any additional configuration.
 
 ```javascript
@@ -53,8 +53,7 @@ var TouchDemo = React.createClass({
 ```
 
 
-## 弹性盒子和样式
-视图布局应该是简单的，这就是为什么我们从 web 引入了弹性盒子布局到 React Native。弹性盒子使构建大多数常规的 UI 布局变得简单，
+## Flexbox and Styling
 Laying out views should be easy, which is why we brought the flexbox layout model from the web to React Native.  Flexbox makes it simple to build the most common UI layouts, such as stacked and nested boxes with margin and padding.  React Native also supports common web styles, such as `fontWeight`, and the `StyleSheet` abstraction provides an optimized mechanism to declare all your styles and layout right along with the components that use them and apply them inline.
 
 ```javascript
@@ -146,15 +145,15 @@ var React = require('react-native');
 var { NativeModules, Text } = React;
 
 var Message = React.createClass({
+  getInitialState() {
+    return { text: 'Goodbye World.' };
+  },
+  componentDidMount() {
+    NativeModules.MyCustomModule.processString(this.state.text, (text) => {
+      this.setState({text});
+    });
+  },
   render: function() {
-    getInitialState() {
-      return { text: 'Goodbye World.' };
-    },
-    componentDidMount() {
-      NativeModules.MyCustomModule.processString(this.state.text, (text) => {
-        this.setState({text});
-      });
-    },
     return (
       <Text>{this.state.text}</Text>
     );
@@ -180,7 +179,7 @@ Custom iOS views can be exposed by subclassing `RCTViewManager`, implementing a 
 
 RCT_EXPORT_VIEW_PROPERTY(myCustomProperty);
 
-@end`}
+@end
 ```
 
 ```javascript
@@ -191,5 +190,13 @@ var MyCustomView = createReactIOSNativeComponentClass({
   uiViewClassName: 'MyCustomView',
 });
 ```
+
+## Running the Examples
+
+- `git clone git@github.com:facebook/react-native.git`
+- `cd react-native && npm install`
+- `cd Examples`
+
+Now open any example and hit run in Xcode.
 
 Further documentation, tutorials, and more on the [React Native website](http://facebook.github.io/react-native/docs/getting-started.html).

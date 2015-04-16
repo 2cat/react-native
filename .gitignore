@@ -26,3 +26,5 @@ DerivedData
 
 # Node
 node_modules
+
+.idea
