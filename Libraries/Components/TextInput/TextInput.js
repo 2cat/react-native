@@ -58,6 +58,8 @@ var RCTTextFieldAttributes = merge(RCTTextViewAttributes, {
   caretHidden: true,
   enabled: true,
   clearButtonMode: true,
+  clearTextOnFocus: true,
+  selectTextOnFocus: true,
 });
 
 var onlyMultiline = {
@@ -198,12 +200,6 @@ var TextInput = React.createClass({
      * automatically enables it when there is text. Default value is false.
      */
     enablesReturnKeyAutomatically: PropTypes.bool,
-
-    /**
-     * If true, the text input obscures the text entered so that sensitive text
-     * like passwords stay secure. Default value is false.
-     */
-    secureTextEntry: PropTypes.bool,
     /**
      * If true, the text input can be multiple lines. Default value is false.
      */
@@ -217,17 +213,21 @@ var TextInput = React.createClass({
      */
     onFocus: PropTypes.func,
     /**
-     * (text: string) => void
-     *
      * Callback that is called when the text input's text changes.
      */
     onChange: PropTypes.func,
     onChangeText: PropTypes.func,
-
+    /**
+     * Callback that is called when text input ends.
+     */
     onEndEditing: PropTypes.func,
+    /**
+     * Callback that is called when the text input's submit button is pressed.
+     */
     onSubmitEditing: PropTypes.func,
     /**
-     * If true, the TextInput will be a password field. Default value is false.
+     * If true, the text input obscures the text entered so that sensitive text
+     * like passwords stay secure. Default value is false.
      */
     password: PropTypes.bool,
     /**
@@ -269,7 +269,17 @@ var TextInput = React.createClass({
       'unless-editing',
       'always',
     ]),
-
+    /**
+     * If true, clears the text field automatically when editing begins
+     */
+    clearTextOnFocus: PropTypes.bool,
+    /**
+     * If true, selected the text automatically when editing begins
+     */
+    selectTextOnFocus: PropTypes.bool,
+    /**
+     * Styles
+     */
     style: Text.propTypes.style,
     /**
      * Used to locate this view in end-to-end tests.
@@ -421,7 +431,7 @@ var TextInput = React.createClass({
           keyboardType={keyboardType}
           returnKeyType={returnKeyType}
           enablesReturnKeyAutomatically={this.props.enablesReturnKeyAutomatically}
-          secureTextEntry={this.props.secureTextEntry}
+          secureTextEntry={this.props.password || this.props.secureTextEntry}
           onFocus={this._onFocus}
           onBlur={this._onBlur}
           onChange={this._onChange}
@@ -433,6 +443,8 @@ var TextInput = React.createClass({
           autoCapitalize={autoCapitalize}
           autoCorrect={this.props.autoCorrect}
           clearButtonMode={clearButtonMode}
+          clearTextOnFocus={this.props.clearTextOnFocus}
+          selectTextOnFocus={this.props.selectTextOnFocus}
         />;
     } else {
       for (var propKey in notMultiline) {
@@ -466,7 +478,7 @@ var TextInput = React.createClass({
           keyboardType={keyboardType}
           returnKeyType={returnKeyType}
           enablesReturnKeyAutomatically={this.props.enablesReturnKeyAutomatically}
-          secureTextEntry={this.props.secureTextEntry}
+          secureTextEntry={this.props.password || this.props.secureTextEntry}
           onFocus={this._onFocus}
           onBlur={this._onBlur}
           onChange={this._onChange}
@@ -494,7 +506,7 @@ var TextInput = React.createClass({
 
   _renderAndroid: function() {
     var autoCapitalize = autoCapitalizeConsts[this.props.autoCapitalize];
-    return (
+    var textContainer =
       <AndroidTextInput
         ref="input"
         style={[this.props.style]}
@@ -505,11 +517,19 @@ var TextInput = React.createClass({
         onFocus={this._onFocus}
         onBlur={this._onBlur}
         onChange={this._onChange}
-        password={this.props.password}
+        onEndEditing={this.props.onEndEditing}
+        onSubmitEditing={this.props.onSubmitEditing}
+        password={this.props.password || this.props.secureTextEntry}
         placeholder={this.props.placeholder}
-        value={this.props.value}
-        testID={this.props.testID}
-      />
+        value={this.state.bufferedValue}
+      />;
+
+    return (
+      <TouchableWithoutFeedback
+        onPress={this._onPress}
+        testID={this.props.testID}>
+        {textContainer}
+      </TouchableWithoutFeedback>
     );
   },
 

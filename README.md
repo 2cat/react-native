@@ -118,7 +118,7 @@ var GeoInfo = React.createClass({
 
 ## 扩展性（ Extensibility ）
 
-使用 React Native ，在不写一行本地代码的前提下创建一个伟大的 app 是很有可能的，但是 React Native 也可以通过自定义的本地视图和模块来轻松扩展 - 这意味着你可以重用已经创建好的任何东西，也能够引入和使用你最喜欢的本地库。为了在 iOS 中创建一个简单的模块，先创建一个实现 `RCTBridgeModule` 协议的新类，然后在你想导出到 JavaScript 的函数中添加 `RCT_EXPORT` 。
+使用 React Native ，在不写一行本地代码的前提下创建一个伟大的 app 是很有可能的，但是 React Native 也可以通过自定义的本地视图和模块来轻松扩展 - 这意味着你可以重用已经创建好的任何东西，也能够引入和使用你最喜欢的本地库。为了在 iOS 中创建一个简单的模块，先创建一个实现 `RCTBridgeModule` 协议的新类，在 `RCT_EXPORT_METHOD` 中包装你想导出到 JavaScript 中的函数。另外，类本身必须用 `RCT_EXPORT_MODULE()` 显示导出。
 
 ```objc
 // Objective-C
@@ -129,10 +129,13 @@ var GeoInfo = React.createClass({
 @end
 
 @implementation MyCustomModule
-- (void)processString:(NSString *)input callback:(RCTResponseSenderBlock)callback
+
+RCT_EXPORT_MODULE();
+
+// Available as NativeModules.MyCustomModule.processString
+RCT_EXPORT_METHOD(processString:(NSString *)input callback:(RCTResponseSenderBlock)callback)
 {
-  RCT_EXPORT(); // available as NativeModules.MyCustomModule.processString
-  callback(@[[input stringByReplacingOccurrencesOfString:@"Goodbye" withString:@"Hello"];]]);
+  callback(@[[input stringByReplacingOccurrencesOfString:@"Goodbye" withString:@"Hello"]]);
 }
 @end
 ```
@@ -189,6 +192,13 @@ var MyCustomView = createReactIOSNativeComponentClass({
   uiViewClassName: 'MyCustomView',
 });
 ```
+## 运行例子
+
+- `git clone https://github.com/facebook/react-native.git`
+- `cd react-native && npm install`
+- `cd Examples`
+
+现在，可以在 Xcode 中打开任何示例并运行。
 
 更多更深入的文档内容，教程，请参看 [React Native website](http://facebook.github.io/react-native/docs/getting-started.html) 。
 
@@ -209,4 +219,4 @@ var MyCustomView = createReactIOSNativeComponentClass({
   - 在真实设备上运行
   - 与已有 App 集成
   - JavaScript 环境
-  
+

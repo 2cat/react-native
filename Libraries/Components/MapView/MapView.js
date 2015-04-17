@@ -96,6 +96,23 @@ var MapView = React.createClass({
     }),
 
     /**
+     * Map annotations with title/subtitle.
+     */
+    annotations: React.PropTypes.arrayOf(React.PropTypes.shape({
+      /**
+       * The location of the annotation.
+       */
+      latitude: React.PropTypes.number.isRequired,
+      longitude: React.PropTypes.number.isRequired,
+
+      /**
+       * Annotation title/subtile.
+       */
+      title: React.PropTypes.string,
+      subtitle: React.PropTypes.string,
+    })),
+
+    /**
      * Maximum size of area that can be displayed.
      */
     maxDelta: React.PropTypes.number,
@@ -142,11 +159,15 @@ var MapView = React.createClass({
         pitchEnabled={this.props.pitchEnabled}
         scrollEnabled={this.props.scrollEnabled}
         region={this.props.region}
+        annotations={this.props.annotations}
         maxDelta={this.props.maxDelta}
         minDelta={this.props.minDelta}
         legalLabelInsets={this.props.legalLabelInsets}
         onChange={this._onChange}
         onTouchStart={this.props.onTouchStart}
+        onTouchMove={this.props.onTouchMove}
+        onTouchEnd={this.props.onTouchEnd}
+        onTouchCancel={this.props.onTouchCancel}
       />
     );
   },
@@ -162,6 +183,7 @@ var RCTMap = createReactIOSNativeComponentClass({
       pitchEnabled: true,
       scrollEnabled: true,
       region: {diff: deepDiffer},
+      annotations: {diff: deepDiffer},
       maxDelta: true,
       minDelta: true,
       legalLabelInsets: {diff: insetsDiffer},

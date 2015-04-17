@@ -109,7 +109,7 @@ var styles = StyleSheet.create({
     flex: 1,
   },
   label: {
-    width: 80,
+    width: 120,
     justifyContent: 'flex-end',
     flexDirection: 'row',
     marginRight: 10,
@@ -251,7 +251,7 @@ exports.examples = [
       return (
         <View>
           <WithLabel label="true">
-            <TextInput secureTextEntry={true} style={styles.default} value="abc" />
+            <TextInput password={true} style={styles.default} value="abc" />
           </WithLabel>
         </View>
       );
@@ -305,6 +305,31 @@ exports.examples = [
             <TextInput
               style={styles.default}
               clearButtonMode="always"
+            />
+          </WithLabel>
+        </View>
+      );
+    }
+  },
+  {
+    title: 'Clear and select',
+    render: function () {
+      return (
+        <View>
+          <WithLabel label="clearTextOnFocus">
+            <TextInput
+              placeholder="text is cleared on focus"
+              value="text is cleared on focus"
+              style={styles.default}
+              clearTextOnFocus={true}
+            />
+          </WithLabel>
+          <WithLabel label="selectTextOnFocus">
+            <TextInput
+              placeholder="text is selected on focus"
+              value="text is selected on focus"
+              style={styles.default}
+              selectTextOnFocus={true}
             />
           </WithLabel>
         </View>

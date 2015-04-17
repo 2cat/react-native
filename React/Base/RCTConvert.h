@@ -7,6 +7,8 @@
  * of patent rights can be found in the PATENTS file in the same directory.
  */
 
+#import <objc/message.h>
+
 #import <QuartzCore/QuartzCore.h>
 #import <UIKit/UIKit.h>
 
@@ -38,6 +40,7 @@
 + (NSDictionary *)NSDictionary:(id)json;
 + (NSString *)NSString:(id)json;
 + (NSNumber *)NSNumber:(id)json;
++ (NSData *)NSData:(id)json;
 
 + (NSURL *)NSURL:(id)json;
 + (NSURLRequest *)NSURLRequest:(id)json;
@@ -82,14 +85,26 @@
 + (UIFont *)UIFont:(UIFont *)font withFamily:(id)family
               size:(id)size weight:(id)weight style:(id)style;
 
-+ (NSArray *)NSStringArray:(id)json;
-+ (NSArray *)NSDictionaryArray:(id)json;
-+ (NSArray *)NSURLArray:(id)json;
-+ (NSArray *)NSNumberArray:(id)json;
-+ (NSArray *)UIColorArray:(id)json;
-+ (NSArray *)CGColorArray:(id)json;
+typedef NSArray NSStringArray;
++ (NSStringArray *)NSStringArray:(id)json;
 
-+ (BOOL)css_overflow:(id)json;
+typedef NSArray NSDictionaryArray;
++ (NSDictionaryArray *)NSDictionaryArray:(id)json;
+
+typedef NSArray NSURLArray;
++ (NSURLArray *)NSURLArray:(id)json;
+
+typedef NSArray NSNumberArray;
++ (NSNumberArray *)NSNumberArray:(id)json;
+
+typedef NSArray UIColorArray;
++ (UIColorArray *)UIColorArray:(id)json;
+
+typedef NSArray CGColorArray;
++ (CGColorArray *)CGColorArray:(id)json;
+
+typedef BOOL css_overflow;
++ (css_overflow)css_overflow:(id)json;
 + (css_flex_direction_t)css_flex_direction_t:(id)json;
 + (css_justify_t)css_justify_t:(id)json;
 + (css_align_t)css_align_t:(id)json;
@@ -120,6 +135,11 @@ BOOL RCTSetProperty(id target, NSString *keyPath, SEL type, id json);
  */
 BOOL RCTCopyProperty(id target, id source, NSString *keyPath);
 
+/**
+ * Underlying implementation of RCT_ENUM_CONVERTER macro. Ignore this.
+ */
+NSNumber *RCTConverterEnumValue(const char *, NSDictionary *, NSNumber *, id);
+
 #ifdef __cplusplus
 }
 #endif
@@ -145,7 +165,7 @@ RCT_CUSTOM_CONVERTER(type, name, [json getter])
   }                                            \
   @catch (__unused NSException *e) {           \
     RCTLogError(@"JSON value '%@' of type '%@' cannot be converted to '%s'", \
-    json, [json class], #type); \
+    json, [json classForCoder], #type); \
     json = nil; \
     return code; \
   } \
@@ -154,7 +174,7 @@ RCT_CUSTOM_CONVERTER(type, name, [json getter])
 /**
  * This macro is similar to RCT_CONVERTER, but specifically geared towards
  * numeric types. It will handle string input correctly, and provides more
- * detailed error reporting if a wrong value is passed in.
+ * detailed error reporting if an invalid value is passed in.
  */
 #define RCT_NUMBER_CONVERTER(type, getter) \
 RCT_CUSTOM_CONVERTER(type, type, [[self NSNumber:json] getter])
@@ -170,31 +190,15 @@ RCT_CUSTOM_CONVERTER(type, type, [[self NSNumber:json] getter])
   dispatch_once(&onceToken, ^{                            \
     mapping = values;                                     \
   });                                                     \
-  if (!json || json == [NSNull null]) {                   \
-    return default;                                       \
-  }                                                       \
-  if ([json isKindOfClass:[NSNumber class]]) {            \
-    if ([[mapping allValues] containsObject:json] || [json getter] == default) { \
-      return [json getter];                               \
-    }                                                     \
-    RCTLogError(@"Invalid %s '%@'. should be one of: %@", #type, json, [mapping allValues]); \
-    return default;                                       \
-  }                                                       \
-  if (![json isKindOfClass:[NSString class]]) {           \
-    RCTLogError(@"Expected NSNumber or NSString for %s, received %@: %@", #type, [json class], json); \
-  }                                                       \
-  id value = mapping[json];                               \
-  if(!value && [json description].length > 0) {           \
-    RCTLogError(@"Invalid %s '%@'. should be one of: %@", #type, json, [mapping allKeys]); \
-  }                                                       \
-  return value ? [value getter] : default;                \
+  NSNumber *converted = RCTConverterEnumValue(#type, mapping, @(default), json); \
+  return ((type(*)(id, SEL))objc_msgSend)(converted, @selector(getter)); \
 }
 
 /**
  * This macro is used for creating converter functions for typed arrays.
  */
 #define RCT_ARRAY_CONVERTER(type)                         \
-+ (NSArray *)type##Array:(id)json                         \
++ (type##Array *)type##Array:(id)json                     \
 {                                                         \
   NSMutableArray *values = [[NSMutableArray alloc] init]; \
   for (id jsonValue in [self NSArray:json]) {             \

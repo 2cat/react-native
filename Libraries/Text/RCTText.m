@@ -23,15 +23,7 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
   if ((self = [super initWithFrame:frame])) {
-    _textContainer = [[NSTextContainer alloc] init];
-    _textContainer.lineBreakMode = NSLineBreakByTruncatingTail;
-    _textContainer.lineFragmentPadding = 0.0;
-
-    _layoutManager = [[NSLayoutManager alloc] init];
-    [_layoutManager addTextContainer:_textContainer];
-
     _textStorage = [[NSTextStorage alloc] init];
-    [_textStorage addLayoutManager:_layoutManager];
 
     self.contentMode = UIViewContentModeRedraw;
   }
@@ -46,29 +38,54 @@
 
 - (void)setAttributedText:(NSAttributedString *)attributedText
 {
-  [_textStorage setAttributedString:attributedText];
+  for (NSLayoutManager *existingLayoutManager in _textStorage.layoutManagers) {
+    [_textStorage removeLayoutManager:existingLayoutManager];
+  }
+
+  _textStorage = [[NSTextStorage alloc] initWithAttributedString:attributedText];
+
+  if (_layoutManager) {
+    [_textStorage addLayoutManager:_layoutManager];
+  }
+
   [self setNeedsDisplay];
 }
 
-- (NSUInteger)numberOfLines
+- (void)setTextContainer:(NSTextContainer *)textContainer
 {
-  return _textContainer.maximumNumberOfLines;
-}
+  if ([_textContainer isEqual:textContainer]) {
+    return;
+  }
 
-- (void)setNumberOfLines:(NSUInteger)numberOfLines
-{
-  _textContainer.maximumNumberOfLines = numberOfLines;
+  _textContainer = textContainer;
+
+  for (NSInteger i = _layoutManager.textContainers.count - 1; i >= 0; i--) {
+    [_layoutManager removeTextContainerAtIndex:i];
+  }
+
+  if (_textContainer) {
+    [_layoutManager addTextContainer:_textContainer];
+  }
+
   [self setNeedsDisplay];
 }
 
-- (NSLineBreakMode)lineBreakMode
+- (void)setLayoutManager:(NSLayoutManager *)layoutManager
 {
-  return _textContainer.lineBreakMode;
-}
+  if ([_layoutManager isEqual:layoutManager]) {
+    return;
+  }
 
-- (void)setLineBreakMode:(NSLineBreakMode)lineBreakMode
-{
-  _textContainer.lineBreakMode = lineBreakMode;
+  _layoutManager = layoutManager;
+
+  for (NSLayoutManager *existingLayoutManager in _textStorage.layoutManagers) {
+    [_textStorage removeLayoutManager:existingLayoutManager];
+  }
+
+  if (_layoutManager) {
+    [_textStorage addLayoutManager:_layoutManager];
+  }
+
   [self setNeedsDisplay];
 }
 
@@ -97,7 +114,9 @@
 - (NSNumber *)reactTagAtPoint:(CGPoint)point
 {
   CGFloat fraction;
-  NSUInteger characterIndex = [_layoutManager characterIndexForPoint:point inTextContainer:_textContainer fractionOfDistanceBetweenInsertionPoints:&fraction];
+  NSUInteger characterIndex = [_layoutManager characterIndexForPoint:point
+                                                     inTextContainer:_textContainer
+                            fractionOfDistanceBetweenInsertionPoints:&fraction];
 
   NSNumber *reactTag = nil;
 
