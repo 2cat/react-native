@@ -9,12 +9,12 @@ next: tutorial
 
 ## 需要（ Requirements ）
 
-1、OS X - 该项目目前仅支持 iOS ， Xcode 仅在 Mac 系统上运行。
-2、Xcode 新手？ 从 Mac 应用商店[下载它](https://developer.apple.com/xcode/downloads/)。
-3、建议使用 [Homebrew](http://brew.sh/) 安装 node ， watchman ， 和 flow 。
-4、`brew install node` 。 [node](https://nodejs.org/) 或者 [npm](https://docs.npmjs.com/) 新手？
-5、`brew install watchman` 。 我们建议安装 [watchman](https://facebook.github.io/watchman/docs/install.html) ， 否则你可能遇到 node 文件监听 bug 。
-6、`brew install flow` 。如果你想使用 [flow](http://www.flowtype.org) 。
+* 1、OS X - 该项目目前仅支持 iOS ， Xcode 仅在 Mac 系统上运行。
+* 2、Xcode 新手？ 从 Mac 应用商店[下载它](https://developer.apple.com/xcode/downloads/)。
+* 3、建议使用 [Homebrew](http://brew.sh/) 安装 node ， watchman ， 和 flow 。
+* 4、`brew install node` 。 [node](https://nodejs.org/) 或者 [npm](https://docs.npmjs.com/) 新手？
+* 5、`brew install watchman` 。 我们建议安装 [watchman](https://facebook.github.io/watchman/docs/install.html) ， 否则你可能遇到 node 文件监听 bug 。
+* 6、`brew install flow` 。如果你想使用 [flow](http://www.flowtype.org) 。
 
 ## 快速开始
 
