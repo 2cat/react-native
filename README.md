@@ -137,6 +137,7 @@ RCT_EXPORT_METHOD(processString:(NSString *)input callback:(RCTResponseSenderBlo
 {
   callback(@[[input stringByReplacingOccurrencesOfString:@"Goodbye" withString:@"Hello"]]);
 }
+
 @end
 ```
 
@@ -163,7 +164,7 @@ var Message = React.createClass({
 });
 ```
 
-自定义 iOS 视图可以通过继承 `RCTViewManager` 来导出，实现一个 `-view` 方法，通过 `RCT_EXPORT_VIEW_PROPERTY` 宏导出属性。然后在一个简单的 JavaScript 文件中对接上。
+自定义 iOS 视图可以通过继承 `RCTViewManager` 来导出，实现一个 `-view` 方法，通过 `RCT_EXPORT_VIEW_PROPERTY` 宏导出属性。然后在你的应用的 JavaScript 代码中通过 `requireNativeComponent` 来使用这个组件。
 
 ```objc
 // Objective-C
@@ -174,12 +175,13 @@ var Message = React.createClass({
 @end
 
 @implementation MyCustomViewManager
+
 - (UIView *)view
 {
   return [[MyCustomView alloc] init];
 }
 
-RCT_EXPORT_VIEW_PROPERTY(myCustomProperty);
+RCT_EXPORT_VIEW_PROPERTY(myCustomProperty, NSString);
 
 @end`}
 ```
@@ -187,10 +189,20 @@ RCT_EXPORT_VIEW_PROPERTY(myCustomProperty);
 ```javascript
 // JavaScript
 
-var MyCustomView = createReactIOSNativeComponentClass({
-  validAttributes: { myCustomProperty: true },
-  uiViewClassName: 'MyCustomView',
-});
+var React = require('react-native');
+var { requireNativeComponent } = React;
+
+class MyCustomView extends React.Component {
+  render() {
+    return <NativeMyCustomView {...this.props} />;
+  }
+}
+MyCustomView.propTypes = {
+  myCustomProperty: React.PropTypes.oneOf(['a', 'b']),
+};
+
+var NativeMyCustomView = requireNativeComponent('MyCustomView', MyCustomView);
+module.exports = MyCustomView;
 ```
 ## 运行例子
 
